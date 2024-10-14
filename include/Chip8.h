@@ -11,6 +11,12 @@
 #define CHIP8_STACK_SIZE 16
 #define CHIP8_KEY_SIZE 16
 
+/**
+ * @brief A class representing Chip-8 virtual machine.
+ *
+ * This class simulates the basic architecture of the Chip-8 VM,
+ * currently only the original 35 instructions are supported.
+ */
 class Chip8 {
     public:
     void initialize();
@@ -23,13 +29,14 @@ class Chip8 {
     uint8_t memory[CHIP8_MEMORY_SIZE] = {};
     uint8_t registers_v[CHIP8_REGISTER_COUNT] = {};
     uint16_t stack[CHIP8_STACK_SIZE] = {};
-    uint8_t key[CHIP8_KEY_SIZE] = {};
-    uint8_t I = 0; // index register
+    uint8_t input_keys[CHIP8_KEY_SIZE] = {};
+    uint8_t idx_register = 0; // index register
     uint16_t pc = CHIP8_ADDR_PROGRAM_START; // Program counter (PC) starts at 0x200 (Addresses are 12 bit)
     uint16_t sp = 0; // Stack Pointer (SP) resets to 0
     uint16_t opcode = 0; // Current fetched opcode
     uint8_t delay_timer = 0;
     uint8_t sound_timer = 0;
+    bool draw_gfx = false;
     const uint8_t font_set[80] =
     {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // 0

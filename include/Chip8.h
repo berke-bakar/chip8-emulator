@@ -84,6 +84,7 @@ EMSCRIPTEN_BINDINGS(chip8_class) {
         .function("loadProgram", static_cast<void(Chip8::*)(const std::vector<uint8_t> &)>(&Chip8::load_program))
         .function("dumpMemory", static_cast<void(Chip8::*)()const>(&Chip8::dump_memory))
         .function("run", &Chip8::run)
+        .function("updateTimers", &Chip8::update_timers)
         .function("getGfx", emscripten::optional_override([](const Chip8& chip) {
             return emscripten::val(emscripten::typed_memory_view(CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT, chip.get_gfx()));
         }))

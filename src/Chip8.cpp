@@ -6,6 +6,8 @@
 #include <cwchar>
 #include <random>
 
+Chip8::Chip8() = default;
+
 
 void Chip8::initialize() {
     idx_register = 0; // Reset index register
@@ -36,9 +38,9 @@ void Chip8::initialize() {
     draw_gfx = true;
 }
 
-void Chip8::load_program(const char *filename) {
+void Chip8::load_program(const std::string& filename) {
     // Open file
-    FILE *f = fopen(filename, "rb");
+    FILE *f = fopen(filename.c_str(), "rb");
     if (f == nullptr) {
         std::cout << "Failed to open file " << filename << std::endl;
         exit(1);
@@ -55,10 +57,20 @@ void Chip8::load_program(const char *filename) {
     fclose(f);
 }
 
+void Chip8::load_program(const std::vector<uint8_t> &program) {
+    // Load ROM data into memory starting at CHIP8_ADDR_PROGRAM_START
+    for (int i = 0; i < program.size(); i++)
+        memory[CHIP8_ADDR_PROGRAM_START + i] = program[i];
+}
+
 void Chip8::dump_memory(std::ostream & os) const {
-    for (int i = 0; i < CHIP8_MEMORY_SIZE; i++) {
+    for (int i = 0; i < CHIP8_MEMORY_SIZE; i++)
         os << std::hex << "[0x" << i << "]: 0x" << ((int) memory[i]) << std::endl;
-    }
+}
+
+void Chip8::dump_memory() const {
+    for (int i = 0; i < CHIP8_MEMORY_SIZE; i++)
+        std::cout << std::hex << "[0x" << i << "]: 0x" << ((int) memory[i]) << std::endl;
 }
 
 void Chip8::run() {
@@ -352,17 +364,14 @@ void Chip8::run() {
         default:
             std::cout << "Unknown opcode: 0x" << std::hex << opcode << std::endl;
     }
+}
 
-    auto end = std::chrono::high_resolution_clock::now();
-    auto ellapsed = std::chrono::duration_cast<std::chrono::microseconds>(end-begin).count();
-    if (ellapsed >= CHIP8_TIMER_PERIOD_MICROSECONDS) {
-        if (delay_timer > 0) {
-            delay_timer--;
-        }
-        if (sound_timer > 0) {
-            sound_timer--;
-        }
-        begin = std::chrono::high_resolution_clock::now();
+void Chip8::update_timers() {
+    if (delay_timer > 0) {
+        delay_timer--;
+    }
+    if (sound_timer > 0) {
+        sound_timer--;
     }
 }
 

@@ -1,7 +1,14 @@
+// #define __EMSCRIPTEN__
 #ifndef CHIP8_H
 #define CHIP8_H
 #include <cstdint>
 #include <random>
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+#include <emscripten/bind.h>
+#include <emscripten/val.h>
+#endif //__EMSCRIPTEN__
+
 #define CHIP8_DISPLAY_WIDTH 64
 #define CHIP8_DISPLAY_HEIGHT 32
 #define CHIP8_MEMORY_SIZE 4096
@@ -18,12 +25,16 @@
  */
 class Chip8 {
     public:
+    Chip8();
     void initialize();
-    void load_program(const char *filename);
+    void load_program(const std::string& filename); // method for loading directly from file
+    void load_program(const std::vector<uint8_t> & program); // method for loading from vector
     void dump_memory(std::ostream & os) const;
+    void dump_memory() const;
     void run();
     [[nodiscard]] const uint8_t* get_gfx() const;
     void set_input_key(uint8_t key, bool is_pressed);
+    void update_timers();
     bool draw_gfx = false;
     private:
     uint8_t gfx[CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT] = {}; // Display is 64 x 32
@@ -61,7 +72,24 @@ class Chip8 {
         0xF0, 0x80, 0xF0, 0x80, 0x80  // F
       };
 };
+#ifdef __EMSCRIPTEN__
+// Binding code
+EMSCRIPTEN_BINDINGS(chip8_class) {
+    emscripten::register_vector<uint8_t>("Uint8Vector");
 
 
+    emscripten::class_<Chip8>("Chip8")
+        .constructor()
+        .function("initialize", &Chip8::initialize)
+        .function("loadProgram", static_cast<void(Chip8::*)(const std::vector<uint8_t> &)>(&Chip8::load_program))
+        .function("dumpMemory", static_cast<void(Chip8::*)()const>(&Chip8::dump_memory))
+        .function("run", &Chip8::run)
+        .function("getGfx", emscripten::optional_override([](const Chip8& chip) {
+            return emscripten::val(emscripten::typed_memory_view(CHIP8_DISPLAY_WIDTH * CHIP8_DISPLAY_HEIGHT, chip.get_gfx()));
+        }))
+        .function("setInputKey", &Chip8::set_input_key)
+        .property("drawGfx", &Chip8::draw_gfx);
+}
+#endif //__EMSCRIPTEN__
 
-#endif //CHIP8_H
+#endif

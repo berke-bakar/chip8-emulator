@@ -27,6 +27,7 @@ class Chip8 {
     public:
     Chip8();
     void initialize();
+    void reset_program();
     void load_program(const std::string& filename); // method for loading directly from file
     void load_program(const std::vector<uint8_t> & program); // method for loading from vector
     void dump_memory(std::ostream & os) const;
@@ -81,6 +82,7 @@ EMSCRIPTEN_BINDINGS(chip8_class) {
     emscripten::class_<Chip8>("Chip8")
         .constructor()
         .function("initialize", &Chip8::initialize)
+        .function("resetProgram", &Chip8::reset_program)
         .function("loadProgram", static_cast<void(Chip8::*)(const std::vector<uint8_t> &)>(&Chip8::load_program))
         .function("dumpMemory", static_cast<void(Chip8::*)()const>(&Chip8::dump_memory))
         .function("run", &Chip8::run)

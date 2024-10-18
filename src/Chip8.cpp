@@ -28,12 +28,32 @@ void Chip8::initialize() {
     // Clear registers
     memset(registers_v, 0, sizeof(registers_v));
     // Clear keys
-    memset(input_keys, 0, sizeof(registers_v));
+    memset(input_keys, 0, sizeof(input_keys));
 
     // Load font set
     for (int i = 0; i < 80; ++i) {
         memory[i] = font_set[i];
     }
+
+    draw_gfx = true;
+}
+
+void Chip8::reset_program() {
+    idx_register = 0; // Reset index register
+    pc = 0x200; // Reset PC to 0x200, where programs start
+    sp = 0; // Reset stack pointer
+    opcode = 0; // Reset current fetched opcode
+    sound_timer = 0; // Reset sound timer
+    delay_timer = 0; // Reset delay timer
+
+    // Clear display
+    memset(gfx, 0, sizeof(gfx));
+    // Clear stack
+    memset(stack, 0, sizeof(stack));
+    // Clear registers
+    memset(registers_v, 0, sizeof(registers_v));
+    // Clear keys
+    memset(input_keys, 0, sizeof(input_keys));
 
     draw_gfx = true;
 }

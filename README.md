@@ -13,6 +13,11 @@ The emulator includes two main build options:
 * WebAssembly support using Emscripten bindings for running in a browser/nodejs environment.
 * SDL-based desktop application for cross-platform support.
 
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/dc540419-3b32-4624-8419-2290dfca27af">
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/4b9a6b00-2ea6-4272-8cd4-62093e92db2c">
+<img width="480" alt="image" src="https://github.com/user-attachments/assets/ddcb88f4-39cf-4a0f-92f3-fb3d3b0e2c7e">
+
+
 ## Building
 
 ### WebAssembly (WASM)

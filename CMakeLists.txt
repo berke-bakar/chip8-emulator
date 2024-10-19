@@ -4,15 +4,10 @@ project(chip8_emulator)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake_modules)
 
-set(SDL2_PATH "C:/mingw_dev/SDL2-2.30.8/x86_64-w64-mingw32")
-set(EMSDK_INCLUDE_DIR "C:/mingw_dev/emsdk/upstream/emscripten/cache/sysroot/include")
+option(SDL2_PATH "Path to SDL2 installation" "")
 
 find_package(SDL2 REQUIRED)
 include_directories(${SDL2_INCLUDE_DIR})
-
-if (DEFINED __EMSCRIPTEN__)
-        include_directories(${EMSDK_INCLUDE_DIR})
-endif ()
 
 add_executable(chip8_emulator src/main.cpp
         src/Chip8.cpp
@@ -20,3 +15,10 @@ add_executable(chip8_emulator src/main.cpp
 
 target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
 
+if (WIN32)
+        add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
+                COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                "${SDL2_PATH}/bin/SDL2.dll"
+                $<TARGET_FILE_DIR:${PROJECT_NAME}>
+        )
+endif()

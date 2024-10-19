@@ -92,7 +92,12 @@ Chip8 chip8;
 int main(int argc, char* argv[]) {
 
     chip8.initialize();
-    chip8.load_program("./roms/invaders.c8");
+    if(argc < 2)
+    {
+        std::cout << "Usage: chip8_emulator chip8RomFile.(ch8|c8)" << std::endl << std::endl;
+        return 1;
+    }
+    chip8.load_program(argv[1]);
     initializeSDL();
 
     auto cpuCycleBeginTime = std::chrono::high_resolution_clock::now();

@@ -52,7 +52,13 @@ $ git clone https://github.com/berke-bakar/chip8-emulator-wasm.git
 3. Open terminal and change directory to project root, and run the following to configure the project:
 
 ```
-$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_MAKE_PROGRAM="path/to/make_program_executable (eg. ninja.exe)" -G "make_program_name (eg. Ninja)" -S . -B ./cmake-build-release
+$ cmake \
+  -DCMAKE_BUILD_TYPE=Release \  # Build type (e.g. Debug, Release)
+  -DCMAKE_MAKE_PROGRAM="path/to/make_program_executable" \  # Path to make program (e.g. ninja.exe)
+  -DSDL2_PATH="/path/to/sdl2" \  # Path to SDL2 installation (e.g. "C:/mingw_dev/SDL2-2.30.8/x86_64-w64-mingw32")
+  -G "make_program_name" \  # Specify the generator (e.g. Ninja)
+  -S . \  # Source directory
+  -B ./cmake-build-release  # Build directory
 ```
 
 4. Then to build the project run the following:
